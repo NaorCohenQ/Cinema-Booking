@@ -1,4 +1,5 @@
 package com.att.tdp.popcorn_palace.Models;
+import com.att.tdp.popcorn_palace.DTO.ShowtimeRequest;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -23,6 +24,22 @@ public class Showtime {
         this.startTime = startTime;
         this.endTime = endTime;
         this.price = price;
+    }
+
+    public Showtime(ShowtimeRequest showtimeDTO) {
+        this.movieId = showtimeDTO.getMovieId();
+        this.theater = showtimeDTO.getTheater();
+        this.startTime = showtimeDTO.getStartTime();
+        this.endTime = showtimeDTO.getEndTime();
+        this.price = showtimeDTO.getPrice();
+    }
+
+    public void updateDetails(ShowtimeRequest showtimeDTO) {
+        this.movieId = showtimeDTO.getMovieId();
+        this.theater = showtimeDTO.getTheater();
+        this.startTime = showtimeDTO.getStartTime();
+        this.endTime = showtimeDTO.getEndTime();
+        this.price = showtimeDTO.getPrice();
     }
 
     public Long getId() { return id; }

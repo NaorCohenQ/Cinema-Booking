@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.Controllers;
 
+import com.att.tdp.popcorn_palace.DTO.ShowtimeRequest;
 import com.att.tdp.popcorn_palace.Models.Showtime;
 import com.att.tdp.popcorn_palace.Services.ShowtimeServiceAPI;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,13 @@ public class ShowtimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Showtime> addShowtime(@RequestBody Showtime showtime) {
-        return ResponseEntity.ok(showtimeService.addShowtime(showtime));
+    public ResponseEntity<Showtime> addShowtime(@RequestBody ShowtimeRequest showtimeDTO) {
+        return ResponseEntity.ok(showtimeService.addShowtime(showtimeDTO));
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Showtime> updateShowtime(@PathVariable Long id, @RequestBody Showtime showtime) {
-        return ResponseEntity.ok(showtimeService.updateShowtime(id, showtime));
+    public ResponseEntity<Showtime> updateShowtime(@PathVariable Long id, @RequestBody ShowtimeRequest showtimeDTO) {
+        return ResponseEntity.ok(showtimeService.updateShowtime(id, showtimeDTO));
     }
 
     @DeleteMapping("/{id}")

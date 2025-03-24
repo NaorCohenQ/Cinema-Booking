@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.Models;
 
+import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import jakarta.persistence.*;
 import lombok.Setter;
 import lombok.Getter;
@@ -32,6 +33,21 @@ public class Movie {
         this.releaseYear = releaseYear;
     }
 
+    public Movie(MovieRequest movieDTO) {
+        this.title = movieDTO.getTitle();
+        this.genre = movieDTO.getGenre();
+        this.duration = movieDTO.getDuration();
+        this.rating = movieDTO.getRating();
+        this.releaseYear = movieDTO.getReleaseYear();
+    }
+    public void updateDetails(MovieRequest movieDTO) {
+        this.title = movieDTO.getTitle();
+        this.genre = movieDTO.getGenre();
+        this.duration = movieDTO.getDuration();
+        this.rating = movieDTO.getRating();
+        this.releaseYear = movieDTO.getReleaseYear();
+    }
+
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public String getGenre() { return genre; }
@@ -62,4 +78,6 @@ public class Movie {
     public void setReleaseYear(int releaseYear) {
         this.releaseYear = releaseYear;
     }
+
+
 }

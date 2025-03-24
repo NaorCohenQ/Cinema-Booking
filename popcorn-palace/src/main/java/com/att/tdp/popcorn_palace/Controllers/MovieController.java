@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.Controllers;
 
+import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
 import com.att.tdp.popcorn_palace.Services.MovieServiceAPI;
 import org.springframework.http.HttpStatus;
@@ -24,25 +25,23 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
-        try {
-            Movie savedMovie = movieService.addMovie(movie);
-            return ResponseEntity.ok(savedMovie);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<?> addMovie(@RequestBody MovieRequest movieDTO) {
+            return ResponseEntity.ok(movieService.addMovie(movieDTO));
     }
 
     @PostMapping("/update/{movieTitle}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable String movieTitle, @RequestBody Movie movie) {
-        return ResponseEntity.ok(movieService.updateMovie(movieTitle, movie));
+    public ResponseEntity<Movie> updateMovie(@PathVariable String movieTitle, @RequestBody MovieRequest movieDTO) {
+        return ResponseEntity.ok(movieService.updateMovie(movieTitle, movieDTO));
     }
 
     @DeleteMapping("/{movieTitle}")
     public ResponseEntity<String> deleteMovie(@PathVariable String movieTitle) {
         movieService.deleteMovie(movieTitle);
         return ResponseEntity.ok("Movie deleted successfully");
+    }
+
+    @GetMapping("/title/{title}")
+    public ResponseEntity<Movie> getMovieByTitle(@PathVariable String title) {
+        return ResponseEntity.ok(movieService.getMovieByTitle(title));
     }
 }
