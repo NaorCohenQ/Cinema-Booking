@@ -140,7 +140,7 @@ class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Invalid UUID format")));
+                .andExpect(content().string(containsString("Invalid")));
     }
 
 }

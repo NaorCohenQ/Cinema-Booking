@@ -52,8 +52,7 @@ public class MovieServiceImpl implements MovieServiceAPI {
         if (movieDTO == null) {
             throw new IllegalArgumentException("Movie request body is missing!");
         }
-        validateMovieFields(movieDTO);
-
+        //validateMovieFields(movieDTO);
 
         if (validateIfMovieExists(movieDTO.getTitle())) {
             logger.warn("❌ Attempt to add existing movie: {}", movieDTO.getTitle());
@@ -71,7 +70,7 @@ public class MovieServiceImpl implements MovieServiceAPI {
     @Override
     public Movie updateMovie(String movieTitle, MovieRequest movieDTO) {
         Movie reqMovie = getMovieIfExists(movieTitle);
-        validateMovieFields(movieDTO);
+        //validateMovieFields(movieDTO);
         reqMovie.updateDetails(movieDTO);
         Movie savedMovie = movieRepository.save(reqMovie);
         _allMovies.put(savedMovie.getTitle(), savedMovie);

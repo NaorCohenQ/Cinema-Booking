@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace;
 
+import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
 import com.att.tdp.popcorn_palace.Conflicts.SeatAlreadyBookedException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,13 +56,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleInvalidFormat(HttpMessageNotReadableException ex) {
-        if (ex.getCause() instanceof InvalidFormatException ife &&
-                ife.getTargetType().equals(UUID.class)) {
-            return ResponseEntity.badRequest().body("Invalid UUID format for userId.");
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof InvalidFormatException ife) {
+            String field = ife.getPath().get(0).getFieldName();
+            Class<?> targetType = ife.getTargetType();
+
+            if (targetType.equals(UUID.class)) {
+                return ResponseEntity.badRequest().body(ErrorMessages.UUID_INVALID);
+            } else if (targetType.equals(Integer.class) || targetType.equals(int.class)) {
+                return ResponseEntity.badRequest().body(ErrorMessages.NUMBER_FORMAT_ERROR + field);
+            } else if (targetType.equals(String.class)) {
+                return ResponseEntity.badRequest().body(ErrorMessages.TEXT_FORMAT_ERROR + field);
+            }
         }
 
-        return ResponseEntity.badRequest().body("Malformed JSON input.");
+        return ResponseEntity.badRequest().body(ErrorMessages.INVALID_JSON);
     }
+
 
     @ExceptionHandler(SeatAlreadyBookedException.class)
     public ResponseEntity<String> handleSeatAlreadyBooked(SeatAlreadyBookedException ex) {

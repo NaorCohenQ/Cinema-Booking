@@ -1,6 +1,8 @@
 package com.att.tdp.popcorn_palace;
 
+import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,20 +21,22 @@ class ApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+
+
     @Test
     void testRealClientPostRequest() {
-        Movie newMovie = new Movie("Avatar", "Fantasy", 162, "8.0", 2009);
+        MovieRequest newMovie = new MovieRequest("AvatarAppTest", "Fantasy", 162, "8.0", 2009);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<Movie> request = new HttpEntity<>(newMovie, headers);
+        HttpEntity<MovieRequest> request = new HttpEntity<>(newMovie, headers);
 
         ResponseEntity<Movie> response = restTemplate.postForEntity("http://localhost:" + port + "/movies", request, Movie.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getTitle()).isEqualTo("Avatar");
+        assertThat(response.getBody().getTitle()).isEqualTo("AvatarAppTest");
     }
 }
 

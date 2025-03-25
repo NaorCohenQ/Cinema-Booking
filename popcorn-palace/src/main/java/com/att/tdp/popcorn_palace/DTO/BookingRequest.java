@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.DTO;
 
+import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -7,14 +8,14 @@ import java.util.UUID;
 
 public class BookingRequest {
 
-    @NotNull(message = "Showtime ID is required")
+    @NotNull(message = ErrorMessages.BOOKING_SHOWTIME_ID_REQUIRED)
     private Long showtimeId;
 
-    @NotNull(message = "Seat number is required")
-    @Min(value = 1, message = "Seat number must be greater than 0")
+    @NotNull(message = ErrorMessages.BOOKING_SEAT_NUMBER_INVALID)
+    @Min(value = 1, message = ErrorMessages.BOOKING_SEAT_NUMBER_INVALID)
     private Integer seatNumber;
 
-    @NotNull(message = "User ID is required")
+    @NotNull(message = ErrorMessages.BOOKING_USER_ID_INVALID)
     private UUID userId;
 
     public BookingRequest() {

@@ -3,6 +3,7 @@ package com.att.tdp.popcorn_palace.Controllers;
 import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
 import com.att.tdp.popcorn_palace.Services.MovieServiceAPI;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addMovie(@RequestBody MovieRequest movieDTO) {
+    public ResponseEntity<?> addMovie(@RequestBody @Valid MovieRequest movieDTO) {
             return ResponseEntity.ok(movieService.addMovie(movieDTO));
     }
 

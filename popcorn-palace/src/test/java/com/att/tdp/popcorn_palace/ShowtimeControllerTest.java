@@ -106,7 +106,7 @@ class ShowtimeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Invalid movie ID")));
+                .andExpect(content().string(containsString("Validation error")));
     }
 
     @Test
