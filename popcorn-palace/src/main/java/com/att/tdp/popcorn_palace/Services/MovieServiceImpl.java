@@ -60,7 +60,7 @@ public class MovieServiceImpl implements MovieServiceAPI {
             throw new IllegalArgumentException("Movie titled: " + movieDTO.getTitle() + " already exists!");
         }
 
-        validateMovieFields(movieDTO);
+        //validateMovieFields(movieDTO);
         Movie newMovie = new Movie(movieDTO);
         Movie savedMovie = movieRepository.save(newMovie);
         _allMovies.put(savedMovie.getTitle(), savedMovie);
