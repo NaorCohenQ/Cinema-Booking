@@ -47,4 +47,5 @@ public class BookingServiceImpl implements BookingServiceAPI {
         logger.info("✅ Booking confirmed with ID: " + booking.getBookingId());
         return booking.getBookingId();
     }
+
 }

@@ -5,4 +5,5 @@ import java.util.UUID;
 
 public interface BookingServiceAPI {
     UUID createBooking(BookingRequest request);
+    //void deleteAllByShowtimeId(Long showtimeID);
 }

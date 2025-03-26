@@ -9,7 +9,7 @@ public class ErrorMessages {
     public static final String DURATION_INVALID = "Duration cannot be positive!";
 
     // Showtime errors
-    public static final String SHOWTIME_MOVIE_ID_REQUIRED = "Movie ID is required!";
+    public static final String SHOWTIME_MOVIE_ID_REQUIRED = "Invalid Movie ID!";
     public static final String SHOWTIME_THEATER_REQUIRED = "Theater name is required!";
     public static final String SHOWTIME_START_TIME_REQUIRED = "Start time is required!";
     public static final String SHOWTIME_END_TIME_REQUIRED = "End time is required!";
@@ -27,4 +27,5 @@ public class ErrorMessages {
     public static final String UUID_INVALID = "Invalid UUID format for userId.";
     public static final String NUMBER_FORMAT_ERROR = "Invalid number format for field: ";
     public static final String TEXT_FORMAT_ERROR = "Invalid text input for field: ";
+    public static final String LOW_DURATION = "Showtime duration is shorter than the movie duration";
 }

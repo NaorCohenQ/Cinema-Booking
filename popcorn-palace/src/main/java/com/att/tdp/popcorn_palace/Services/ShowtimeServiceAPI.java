@@ -10,4 +10,5 @@ public interface ShowtimeServiceAPI {
     Showtime addShowtime(ShowtimeRequest showtime);
     Showtime updateShowtime(Long id, ShowtimeRequest showtime);
     void deleteShowtime(Long id);
+    void deleteAllByMovieId(Long movieID);
 }

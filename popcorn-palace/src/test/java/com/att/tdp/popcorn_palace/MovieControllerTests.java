@@ -3,6 +3,7 @@ package com.att.tdp.popcorn_palace;
 import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
 import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
+import com.att.tdp.popcorn_palace.Models.Showtime;
 import com.att.tdp.popcorn_palace.Repositories.MovieRepository;
 import com.att.tdp.popcorn_palace.Services.MovieServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
@@ -183,5 +186,22 @@ class MovieControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Invalid")));
     }
+
+//    @Test
+//    void testDeleteMovie_WithShowtimes_Fails() throws Exception {
+//        Movie movie = movieRepository.save(new Movie("Blade Runner", "Sci-Fi", 117, "8.1", 1982));
+//        showtimeRepository.save(new Showtime(
+//                movie.getId(),
+//                "Retro Hall",
+//                LocalDateTime.now().plusHours(2),
+//                LocalDateTime.now().plusHours(4),
+//                25.0
+//        ));
+//
+//        mockMvc.perform(delete("/movies/" + movie.getId()))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(content().string(containsString("existing showtimes")));
+//    }
+
 
 }

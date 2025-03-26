@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     List<Showtime> findByTheater(String theater);
+    void deleteAllByMovieId(Long movieId);
+
 }
 

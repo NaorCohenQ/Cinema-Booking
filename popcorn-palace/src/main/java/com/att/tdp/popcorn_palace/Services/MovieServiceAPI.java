@@ -11,5 +11,6 @@ public interface MovieServiceAPI {
     void deleteMovie(String movieTitle);
     Movie getMovieByTitle(String title);
     boolean validateIfMovieExists(Long movieID);
+    Movie getMovieIfExists(Long movieID);
 }
 

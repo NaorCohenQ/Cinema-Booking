@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace;
 
+import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
 import com.att.tdp.popcorn_palace.DTO.ShowtimeRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
 import com.att.tdp.popcorn_palace.Models.Showtime;
@@ -51,7 +52,7 @@ class ShowtimeControllerTest {
                 movie.getId(),
                 "Main Theater",
                 LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusHours(3),
+                LocalDateTime.now().plusHours(4),
                 45.0
         );
 
@@ -69,7 +70,7 @@ class ShowtimeControllerTest {
         Showtime existing = new Showtime(
                 movie.getId(), "Main Theater",
                 LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusHours(3),
+                LocalDateTime.now().plusHours(4),
                 40.0
         );
         showtimeRepository.save(existing);
@@ -78,7 +79,7 @@ class ShowtimeControllerTest {
                 movie.getId(),
                 "Main Theater",
                 LocalDateTime.now().plusHours(2),  // Overlaps
-                LocalDateTime.now().plusHours(4),
+                LocalDateTime.now().plusHours(5),
                 50.0
         );
 
@@ -115,14 +116,14 @@ class ShowtimeControllerTest {
         Showtime showtime = showtimeRepository.save(new Showtime(
                 movie.getId(), "VIP Hall",
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(1).plusHours(2),
+                LocalDateTime.now().plusDays(1).plusHours(3),
                 60.0
         ));
 
         ShowtimeRequest updateRequest = new ShowtimeRequest(
                 movie.getId(), "VIP Hall",
-                LocalDateTime.now().plusDays(1).plusHours(1),
-                LocalDateTime.now().plusDays(1).plusHours(3),
+                LocalDateTime.now().plusDays(1).plusHours(2),
+                LocalDateTime.now().plusDays(1).plusHours(5),
                 70.0
         );
 
@@ -185,6 +186,19 @@ class ShowtimeControllerTest {
                 .andExpect(content().string(containsString("not found")));
     }
 
+    @Test
+    void testDeleteMovieWithShowTime_NotFound() throws Exception {
+        Movie movie = movieRepository.save(new Movie("Tenet", "Sci-Fi", 150, "7.5", 2020));
+        Showtime first = showtimeRepository.save(new Showtime(
+                movie.getId(), "Main Theater",
+                LocalDateTime.now().plusHours(2),
+                LocalDateTime.now().plusHours(4),
+                40.0
+        ));
+
+
+    }
+
 
     //----- might be duplicates ---
 
@@ -194,7 +208,7 @@ class ShowtimeControllerTest {
         Showtime existing = showtimeRepository.save(new Showtime(
                 movie.getId(), "Main Theater",
                 LocalDateTime.now().plusHours(2),
-                LocalDateTime.now().plusHours(4),
+                LocalDateTime.now().plusHours(5),
                 35.0
         ));
 
@@ -202,7 +216,7 @@ class ShowtimeControllerTest {
                 movie.getId(),
                 "Main Theater",
                 LocalDateTime.now().plusHours(3),
-                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().plusHours(6),
                 42.0
         );
 
@@ -310,4 +324,52 @@ class ShowtimeControllerTest {
                 .andExpect(jsonPath("$.theater").value("Sci-Fi Hall"))
                 .andExpect(jsonPath("$.price").value(55.0));
     }
+//    @Test
+//    void testUpdateShowtime_Success() throws Exception {
+//        Movie movie = movieRepository.save(new Movie("Interstellar", "Sci-Fi", 169, "8.6", 2014));
+//        Showtime showtime = showtimeRepository.save(new Showtime(
+//                movie.getId(), "VIP Hall",
+//                LocalDateTime.now().plusDays(1),
+//                LocalDateTime.now().plusDays(1).plusHours(2),
+//                60.0
+//        ));
+//
+//        ShowtimeRequest updateRequest = new ShowtimeRequest(
+//                movie.getId(), "VIP Hall",
+//                LocalDateTime.now().plusDays(1).plusHours(1),
+//                LocalDateTime.now().plusDays(1).plusHours(3),
+//                70.0
+//        );
+//
+//        mockMvc.perform(post("/showtimes/update/" + showtime.getId())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(updateRequest)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.price").value(70.0));
+//    }
+
+    @Test
+    void testAddShowtimeLowDuration_Failure() throws Exception {
+        Movie movie = movieRepository.save(new Movie("Interstellar", "Sci-Fi", 169, "8.6", 2014));
+        Showtime showtime = showtimeRepository.save(new Showtime(
+                movie.getId(), "VIP Hall",
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(1).plusHours(3),
+                60.0
+        ));
+
+        ShowtimeRequest updateRequest = new ShowtimeRequest(
+                movie.getId(), "VIP Hall",
+                LocalDateTime.now().plusDays(1).plusHours(1),
+                LocalDateTime.now().plusDays(1).plusHours(3),
+                70.0
+        );
+
+        mockMvc.perform(post("/showtimes/update/" + showtime.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString(ErrorMessages.LOW_DURATION)));
+    }
+
 }

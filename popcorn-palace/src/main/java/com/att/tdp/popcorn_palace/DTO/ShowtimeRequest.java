@@ -15,6 +15,7 @@ public class ShowtimeRequest {
         private Long id;
 
     @NotNull(message = ErrorMessages.SHOWTIME_MOVIE_ID_REQUIRED)
+    @Min(value = 0, message = ErrorMessages.SHOWTIME_INVALID_PRICE)
     private Long movieId;
 
     @NotBlank(message = ErrorMessages.SHOWTIME_THEATER_REQUIRED)

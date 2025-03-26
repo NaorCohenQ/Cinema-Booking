@@ -1,4 +1,5 @@
 package com.att.tdp.popcorn_palace.Services;
+import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
 import com.att.tdp.popcorn_palace.DTO.ShowtimeRequest;
 import com.att.tdp.popcorn_palace.Models.Showtime;
 import com.att.tdp.popcorn_palace.Repositories.ShowtimeRepository;
@@ -10,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ShowtimeServiceImpl implements ShowtimeServiceAPI {
@@ -20,9 +20,6 @@ public class ShowtimeServiceImpl implements ShowtimeServiceAPI {
     private static final Logger logger = LoggerFactory.getLogger(ShowtimeServiceImpl.class);
 
 
-    private final ConcurrentHashMap<Long, Showtime> _allShowtimes = new ConcurrentHashMap<>();
-    private boolean isAllShowtimesLoaded = false;
-    //private final MovieRepository movieRepository;
     private final MovieServiceAPI movieServiceAPI;
 
 
@@ -33,112 +30,117 @@ public class ShowtimeServiceImpl implements ShowtimeServiceAPI {
 
     @Override
     public List<Showtime> getAllShowtimes() {
-        if(!isAllShowtimesLoaded){
             logger.info("⏬ Loading all movies from DB...");
-            List<Showtime> allShowtimes = showtimeRepository.findAll();
-            for(Showtime showtime : allShowtimes){
-                if(!_allShowtimes.containsKey(showtime.getId()))
-                    _allShowtimes.put(showtime.getId(),showtime);
-            }
-            isAllShowtimesLoaded = true;
-        }
-        return _allShowtimes.values().stream().toList();
+        return showtimeRepository.findAll();
+    }
+
+    @Override
+    public Showtime getShowtimeById(Long showtimeID) {
+        return getShowtime(showtimeID);
+
+    }
+
+    private Showtime getShowtime(Long showtimeID) {
+        logger.info("Try get showtime with ID: "+showtimeID+"from the DB");
+        return showtimeRepository.findById(showtimeID)
+                .orElseThrow(() -> new EntityNotFoundException("Showtime not found"));
     }
 
 //    @Override
 //    public Showtime getShowtimeById(Long showtimeID) {
-//        return getShowtime(showtimeID);
+//            return getShowTime(showtimeID);
 //
 //    }
-//
-//    private Showtime getShowtime(Long showtimeID) {
+
+//    private Showtime getShowTime(Long showtimeID) {
+//        if(_allShowtimes.containsKey(showtimeID))
+//            return _allShowtimes.get(showtimeID);
 //        return showtimeRepository.findById(showtimeID)
-//                .orElseThrow(() -> new EntityNotFoundException("Showtime not found"));
+//                .orElseThrow(() -> new EntityNotFoundException("Showtime with id: "+showtimeID+" not found"));
 //    }
-
-    @Override
-    public Showtime getShowtimeById(Long showtimeID) {
-            return getShowTime(showtimeID);
-
-    }
-
-    private Showtime getShowTime(Long showtimeID) {
-        if(_allShowtimes.containsKey(showtimeID))
-            return _allShowtimes.get(showtimeID);
-        return showtimeRepository.findById(showtimeID)
-                .orElseThrow(() -> new EntityNotFoundException("Showtime with id: "+showtimeID+" not found"));
-    }
 
     @Override
     public Showtime addShowtime(ShowtimeRequest showtimeDTO) {
-            showtimeValidation(showtimeDTO);
-
-//        if (!movieServiceAPI.existsById(showtimeDTO.getMovieId())) {
-//            throw new EntityNotFoundException("Movie ID not found!");
-
+        //showtimeValidation(showtimeDTO);
 
         if (!movieServiceAPI.validateIfMovieExists(showtimeDTO.getMovieId())) {
             throw new EntityNotFoundException("Movie ID not found!");
         }
-            validateOverlapping(showtimeDTO,null);
-//        if (isOverlapping(showtimeDTO, null)) {
-//            throw new IllegalArgumentException("Showtime overlaps with existing one in same theater!");
-//        }
+
+        showtimeValidation(showtimeDTO);
+        validateOverlapping(showtimeDTO,null);
+
         Showtime addedShowtime = showtimeRepository.save(new Showtime(showtimeDTO));
-        _allShowtimes.put(addedShowtime.getId(),addedShowtime);
+        logger.info("✅ Showtime added: {}", addedShowtime.getId());
         return addedShowtime;
     }
 
-    private void showtimeValidation(ShowtimeRequest showtimeDTO) {
-        if (showtimeDTO.getMovieId() == null || showtimeDTO.getMovieId() <= 0) {
-            throw new IllegalArgumentException("Invalid movie ID.");
-        }
-
-        if (showtimeDTO.getPrice() < 0) {
-            throw new IllegalArgumentException("Price cannot be a negative number.");
-        }
-
-        if (showtimeDTO.getTheater() == null || showtimeDTO.getTheater().trim().isEmpty()) {
-            throw new IllegalArgumentException("Theater name cannot be empty.");
-        }
-
-        if (showtimeDTO.getStartTime() == null || showtimeDTO.getEndTime() == null) {
-            throw new IllegalArgumentException("Start and end time must be provided.");
-        }
-
-        if (!showtimeDTO.getEndTime().isAfter(showtimeDTO.getStartTime())) {
-            throw new IllegalArgumentException("End time must be after start time.");
-        }
-
-
+//    private void showtimeValidation(ShowtimeRequest showtimeDTO) {
+//        if (showtimeDTO.getMovieId() == null || showtimeDTO.getMovieId() <= 0) {
+//            throw new IllegalArgumentException("Invalid movie ID.");
+//        }
+//
+//        if (showtimeDTO.getPrice() < 0) {
+//            throw new IllegalArgumentException("Price cannot be a negative number.");
+//        }
+//
+//        if (showtimeDTO.getTheater() == null || showtimeDTO.getTheater().trim().isEmpty()) {
+//            throw new IllegalArgumentException("Theater name cannot be empty.");
+//        }
+//
+//        if (showtimeDTO.getStartTime() == null || showtimeDTO.getEndTime() == null) {
+//            throw new IllegalArgumentException("Start and end time must be provided.");
+//        }
+//
+//        if (!showtimeDTO.getEndTime().isAfter(showtimeDTO.getStartTime())) {
+//            throw new IllegalArgumentException("End time must be after start time.");
+//        }
+//
+//
+//    }
+private void showtimeValidation(ShowtimeRequest showtimeDTO) {
+        LocalDateTime startTime = showtimeDTO.getStartTime();
+        LocalDateTime endTime = showtimeDTO.getEndTime();
+    if (!showtimeDTO.getEndTime().isAfter(showtimeDTO.getStartTime())) {
+        throw new IllegalArgumentException("End time must be after start time.");
     }
+    //Validate duration fits.
+        int duration = movieServiceAPI.getMovieIfExists(showtimeDTO.getMovieId()).getDuration();
+        long givenDurationMinutes = java.time.Duration.between(startTime, endTime).toMinutes();
+        if(duration > givenDurationMinutes){
+            throw new IllegalArgumentException(ErrorMessages.LOW_DURATION +"(" + duration+ " minutes)");
+        }
+}
 
     @Override
     public Showtime updateShowtime(Long toUpdateID, ShowtimeRequest showtimeDTO) {
 
-        showtimeValidation(showtimeDTO);
-        Showtime toUpdateShowtime = getShowTime(toUpdateID);
+
+        Showtime toUpdateShowtime = getShowtime(toUpdateID);
 
         if (!movieServiceAPI.validateIfMovieExists(showtimeDTO.getMovieId())) {
             throw new EntityNotFoundException("Movie ID not found!");
         }
-
+        showtimeValidation(showtimeDTO);
         validateOverlapping(showtimeDTO,toUpdateID);
 
         toUpdateShowtime.updateDetails(showtimeDTO);
+        Showtime updatedShowtime = showtimeRepository.save(toUpdateShowtime);
+        logger.info("✅ Showtime Updated: {}", updatedShowtime.getId());
         return showtimeRepository.save(toUpdateShowtime);
     }
+
 
     @Override
     @Transactional
     public void deleteShowtime(Long id) {
-        if(isAllShowtimesLoaded && !_allShowtimes.containsKey(id))
-            throw new EntityNotFoundException("There is no such showtime with ID : "+id+" Therefore, a request to delete it cannot be done.");
-          showtimeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Showtime not found"));
+        showtimeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Showtime with ID " + id + " not found!"));
         showtimeRepository.deleteById(id);
-        if(_allShowtimes.containsKey(id))
-            _allShowtimes.remove(id);
+        logger.info("🗑️ Showtime deleted with ID {}", id);
     }
+
+
 
     private boolean validateOverlapping(ShowtimeRequest showtimeDTO , Long excludeId) {
         LocalDateTime start= showtimeDTO.getStartTime();
@@ -152,5 +154,11 @@ public class ShowtimeServiceImpl implements ShowtimeServiceAPI {
             }
         }
         return false;
+    }
+
+    @Override
+    public void deleteAllByMovieId(Long movieID){
+        showtimeRepository.deleteAllByMovieId(movieID);
+
     }
 }

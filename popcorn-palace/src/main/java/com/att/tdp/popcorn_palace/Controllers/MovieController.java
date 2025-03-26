@@ -31,7 +31,7 @@ public class MovieController {
     }
 
     @PostMapping("/update/{movieTitle}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable String movieTitle, @RequestBody MovieRequest movieDTO) {
+    public ResponseEntity<Movie> updateMovie(@PathVariable String movieTitle, @RequestBody @Valid MovieRequest movieDTO) {
         return ResponseEntity.ok(movieService.updateMovie(movieTitle, movieDTO));
     }
 
@@ -41,7 +41,7 @@ public class MovieController {
         return ResponseEntity.ok("Movie deleted successfully");
     }
 
-    @GetMapping("/title/{title}")
+    @GetMapping("/{title}")
     public ResponseEntity<Movie> getMovieByTitle(@PathVariable String title) {
         return ResponseEntity.ok(movieService.getMovieByTitle(title));
     }
