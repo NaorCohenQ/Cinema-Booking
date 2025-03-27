@@ -58,6 +58,10 @@ public class Showtime {
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
 //    public void updateShowtimeDetails(Showtime existing) {
 //        existing.setMovieId(updated.getMovieId());
 //        existing.setTheater(updated.getTheater());

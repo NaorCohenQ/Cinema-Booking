@@ -1,3 +1,14 @@
 docker-compose -f compose.yml up -d
-docker exec -it b1153c0e6788  psql -U popcorn-palace
+docker ps
 
+docker exec -it 387106961f73  psql -U popcorn-palace
+
+docker exec -it popcorn-palace-db-1 pg_dump -U popcorn-palace --schema-only popcorn-palace > schema.sql
+docker-compose down -v
+docker-compose up -d
+
+
+
+---
+CONTAINER ID   IMAGE      COMMAND                  CREATED              STATUS              PORTS                    NAMES
+387106961f73   postgres   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   popcorn-palace-db-1
