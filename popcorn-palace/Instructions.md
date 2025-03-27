@@ -90,6 +90,7 @@ Open git bash than run unit and integration tests:
 
 **Option 2:**
 Run it manually through the IDE. open the following folder : test->java the right click on java folder and press "Run 'All Tests'"
+
 ---
 
 ---
