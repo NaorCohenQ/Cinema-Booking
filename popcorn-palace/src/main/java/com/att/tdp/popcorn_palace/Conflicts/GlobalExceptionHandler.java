@@ -1,7 +1,5 @@
-package com.att.tdp.popcorn_palace;
+package com.att.tdp.popcorn_palace.Conflicts;
 
-import com.att.tdp.popcorn_palace.Conflicts.ErrorMessages;
-import com.att.tdp.popcorn_palace.Conflicts.SeatAlreadyBookedException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.validator.constraints.UUID;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,7 +44,7 @@ public class GlobalExceptionHandler {
                 .body("Invalid input for '" + ex.getName() + "'. Expected a number, but got: '" + ex.getValue() + "'. You should enter a number.");
     }
 
-    // 500 - Catch-all for unexpected errors
+    // 500 - unexpected errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllExceptions(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -64,7 +61,7 @@ public class GlobalExceptionHandler {
 
             if (targetType.equals(UUID.class)) {
                 return ResponseEntity.badRequest().body(ErrorMessages.UUID_INVALID);
-            } else if (targetType.equals(Integer.class) || targetType.equals(int.class)) {
+            } else if (targetType.equals(Integer.class) || targetType.equals(int.class) || targetType.equals(double.class)) {
                 return ResponseEntity.badRequest().body(ErrorMessages.NUMBER_FORMAT_ERROR + field);
             } else if (targetType.equals(String.class)) {
                 return ResponseEntity.badRequest().body(ErrorMessages.TEXT_FORMAT_ERROR + field);
@@ -74,10 +71,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ErrorMessages.INVALID_JSON);
     }
 
-
-    @ExceptionHandler(SeatAlreadyBookedException.class)
-    public ResponseEntity<String> handleSeatAlreadyBooked(SeatAlreadyBookedException ex) {
+    // 409
+        @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<String> conflictException(ConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.att.tdp.popcorn_palace;
+package com.att.tdp.popcorn_palace.ControllerTests;
 
 import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
@@ -25,7 +25,7 @@ class ApplicationTests {
 
     @Test
     void testRealClientPostRequest() {
-        MovieRequest newMovie = new MovieRequest("AvatarAppTest", "Fantasy", 162, "8.0", 2009);
+        MovieRequest newMovie = new MovieRequest("AvatarAppTest", "Fantasy", 162, 8.0, 2009);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

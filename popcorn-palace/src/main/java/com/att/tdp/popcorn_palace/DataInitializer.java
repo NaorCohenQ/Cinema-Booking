@@ -31,13 +31,10 @@
 //    public void run(String... args) {
 //        if (movieService.getAllMovies().isEmpty()) {
 //            movieService.addMovie(new MovieRequest("Oppenheimer", "Biography", 180, "8.6", 2023));
-//            movieService.addMovie(new MovieRequest("Inception", "Sci-Fi", 148, "9.0", 2010));
 //            movieService.addMovie(new MovieRequest("The Dark Knight", "Action", 152, "9.0", 2008));
 //            movieService.addMovie(new MovieRequest("Interstellar", "Sci-Fi", 169, "8.6", 2014));
 //            movieService.addMovie(new MovieRequest("Titanic", "Drama", 195, "7.8", 1997));
 //            movieService.addMovie(new MovieRequest("Avatar", "Sci-Fi", 162, "7.9", 2009));
-//            movieService.addMovie(new MovieRequest("The Godfather", "Crime", 175, "9.2", 1972));
-//            movieService.addMovie(new MovieRequest("Pulp Fiction", "Crime", 154, "8.9", 1994));
 //        }
 //
 //        List<Movie> movies = movieService.getAllMovies();
@@ -48,8 +45,6 @@
 //            showtimeRepository.save(new Showtime(movies.get(0).getId(), "Theater 1", now.plusDays(1), now.plusDays(1).plusMinutes(148), 45.0));
 //            showtimeRepository.save(new Showtime(movies.get(1).getId(), "Theater 1", now.plusDays(1), now.plusDays(1).plusMinutes(148), 45.0));
 //            showtimeRepository.save(new Showtime(movies.get(2).getId(), "Theater 2", now.plusDays(2), now.plusDays(2).plusMinutes(152), 50.0));
-//            showtimeRepository.save(new Showtime(movies.get(3).getId(), "Theater 3", now.plusDays(3), now.plusDays(3).plusMinutes(169), 60.0));
-//            showtimeRepository.save(new Showtime(movies.get(4).getId(), "Theater 4", now.plusDays(1), now.plusDays(1).plusMinutes(180), 70.0));
 //        }
 //
 ////        List<Showtime> showtimes = showtimeRepository.findAll();

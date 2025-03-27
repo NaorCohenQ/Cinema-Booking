@@ -8,5 +8,4 @@ import java.util.UUID;
 
 public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Optional<Booking> findByShowtimeIdAndSeatNumber(Long showtimeId, int seatNumber);
-    void deleteAllByShowtimeId(Long showtimeID);
 }

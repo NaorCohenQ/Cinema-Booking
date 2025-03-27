@@ -8,7 +8,7 @@ CREATE TABLE movies (
     title VARCHAR(255),
     genre VARCHAR(255),
     duration INTEGER NOT NULL,
-    rating VARCHAR(255) NOT NULL,
+    rating double precision NOT NULL,
     release_year INTEGER NOT NULL
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE showtimes (
     start_time TIMESTAMP,
     end_time TIMESTAMP,
     price DOUBLE PRECISION NOT NULL,
-    FOREIGN KEY (movie_id) REFERENCES movies(id)
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- Bookings table
@@ -29,6 +29,6 @@ CREATE TABLE bookings (
     showtime_id BIGINT,
     seat_number INTEGER NOT NULL,
     user_id UUID,
-    FOREIGN KEY (showtime_id) REFERENCES showtimes(id),
+    FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE,
     CONSTRAINT unique_showtime_seat UNIQUE (showtime_id, seat_number)
 );

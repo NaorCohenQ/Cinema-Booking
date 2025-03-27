@@ -1,4 +1,4 @@
-package com.att.tdp.popcorn_palace;
+package com.att.tdp.popcorn_palace.ControllerTests;
 import com.att.tdp.popcorn_palace.DTO.BookingRequest;
 import com.att.tdp.popcorn_palace.Models.Booking;
 import com.att.tdp.popcorn_palace.Models.Movie;
@@ -53,7 +53,7 @@ class BookingControllerTest {
         showtimeRepository.deleteAll();
         movieRepository.deleteAll();
 
-        movie = movieRepository.save(new Movie("Oppenheimer", "Drama", 180, "9.0", 2023));
+        movie = movieRepository.save(new Movie("Oppenheimer", "Drama", 180, 9.0, 2023));
         showtime = showtimeRepository.save(new Showtime(
                 movie.getId(),
                 "Hall A",
@@ -120,7 +120,7 @@ class BookingControllerTest {
 
     @Test
     void testCreateBooking_InvalidUUIDFormat_Returns400() throws Exception {
-        Movie movie = movieRepository.save(new Movie("Matrix", "Action", 136, "8.7", 1999));
+        Movie movie = movieRepository.save(new Movie("Matrix", "Action", 136, 8.7, 1999));
         Showtime showtime = showtimeRepository.save(new Showtime(
                 movie.getId(), "Main Theater",
                 LocalDateTime.now().plusHours(1),

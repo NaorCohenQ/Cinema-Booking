@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.Services;
 
+import com.att.tdp.popcorn_palace.Conflicts.ConflictException;
 import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
 import com.att.tdp.popcorn_palace.Repositories.MovieRepository;
@@ -58,7 +59,7 @@ public class MovieServiceImpl implements MovieServiceAPI {
 
         if (validateIfMovieExists(movieDTO.getTitle())) {
             logger.warn("❌ Attempt to add existing movie: {}", movieDTO.getTitle());
-            throw new IllegalArgumentException("Movie titled: " + movieDTO.getTitle() + " already exists!");
+            throw new ConflictException("Movie titled: " + movieDTO.getTitle() + " already exists!");
         }
 
         Movie newMovie = new Movie(movieDTO);
@@ -86,6 +87,7 @@ public class MovieServiceImpl implements MovieServiceAPI {
         }
 
         movieRepository.deleteByTitle(movieTitle);
+
         logger.info("🗑️ Movie deleted: {}", movieTitle);
     }
 
@@ -107,23 +109,23 @@ public class MovieServiceImpl implements MovieServiceAPI {
         return movieRepository.findByTitle(movieTitle).orElseThrow(() -> new EntityNotFoundException("Movie named: " + movieTitle + " not found!"));
     }
 
-    private void validateMovieFields(MovieRequest movie) {
-        if (movie.getTitle() == null || movie.getTitle().isBlank()) {
-            throw new IllegalArgumentException("Movie title cannot be empty!");
-        }
-        if (movie.getGenre() == null || movie.getGenre().isBlank()) {
-            throw new IllegalArgumentException("Genre cannot be empty!");
-        }
-        if (movie.getDuration() <= 0) {
-            throw new IllegalArgumentException("Duration must be greater than 0!");
-        }
-        if (movie.getRating() == null || movie.getRating().isBlank()) {
-            throw new IllegalArgumentException("Rating cannot be empty!");
-        }
-        if (movie.getReleaseYear() < 1900 || movie.getReleaseYear() > 2100) {
-            throw new IllegalArgumentException("Invalid release year!");
-        }
-    }
+//    private void validateMovieFields(MovieRequest movie) {
+//        if (movie.getTitle() == null || movie.getTitle().isBlank()) {
+//            throw new IllegalArgumentException("Movie title cannot be empty!");
+//        }
+//        if (movie.getGenre() == null || movie.getGenre().isBlank()) {
+//            throw new IllegalArgumentException("Genre cannot be empty!");
+//        }
+//        if (movie.getDuration() <= 0) {
+//            throw new IllegalArgumentException("Duration must be greater than 0!");
+//        }
+//        if (movie.getRating() == null || movie.getRating().isBlank()) {
+//            throw new IllegalArgumentException("Rating cannot be empty!");
+//        }
+//        if (movie.getReleaseYear() < 1900 || movie.getReleaseYear() > 2100) {
+//            throw new IllegalArgumentException("Invalid release year!");
+//        }
+//    }
 
     private boolean validateIfMovieExists(String movieTitle) {
         return movieRepository.findByTitle(movieTitle).isPresent();

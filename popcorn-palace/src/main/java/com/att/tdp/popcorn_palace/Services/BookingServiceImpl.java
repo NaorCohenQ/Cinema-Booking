@@ -1,12 +1,10 @@
 package com.att.tdp.popcorn_palace.Services;
 
-import com.att.tdp.popcorn_palace.Conflicts.SeatAlreadyBookedException;
+import com.att.tdp.popcorn_palace.Conflicts.ConflictException;
 import com.att.tdp.popcorn_palace.DTO.BookingRequest;
 import com.att.tdp.popcorn_palace.Models.Booking;
 import com.att.tdp.popcorn_palace.Repositories.BookingRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -29,23 +27,27 @@ public class BookingServiceImpl implements BookingServiceAPI {
         int seatNumber = bookingDTO.getSeatNumber();
         long showtimeID = bookingDTO.getShowtimeId();
 
-        logger.info("🎟️ Creating booking for showtime ID " + showtimeID + ", seat " + seatNumber);
+        logger.info("--Try Creating booking for showtime ID " + showtimeID + ", seat " + seatNumber);
 
         // Validate showtime exists
-        showtimeService.getShowtimeById(showtimeID); // throws EntityNotFoundException if not found
+        showtimeService.getShowtimeById(showtimeID);
 
         // Check if seat already booked
-        if (bookingRepository.findByShowtimeIdAndSeatNumber(showtimeID, seatNumber).isPresent()) {
-            String message = "Seat " + seatNumber + " is already booked for showtime ID " + showtimeID;
-            logger.warning("⚠️ " + message);
-            throw new SeatAlreadyBookedException(message); // <-- use 409
-        }
+        validateSeat(seatNumber, showtimeID);
 
         Booking booking = new Booking(bookingDTO);
         bookingRepository.save(booking);
 
-        logger.info("✅ Booking confirmed with ID: " + booking.getBookingId());
+        logger.info("✅ Booking successfully created with ID: " + booking.getBookingId());
         return booking.getBookingId();
+    }
+
+    private void validateSeat(int seatNumber, long showtimeID) {
+        if (bookingRepository.findByShowtimeIdAndSeatNumber(showtimeID, seatNumber).isPresent()) {
+            String message = "Seat " + seatNumber + " is already booked for showtime ID " + showtimeID;
+            logger.warning("!️ " + message);
+            throw new ConflictException(message);
+        }
     }
 
 }

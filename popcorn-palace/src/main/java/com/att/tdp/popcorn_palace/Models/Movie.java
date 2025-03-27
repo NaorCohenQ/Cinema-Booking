@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "movies")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +19,12 @@ public class Movie {
     private String title;
     private String genre;
     private int duration;
-    private String rating;
+    private double rating;
     private int releaseYear;
 
     public Movie() {}
 
-    public Movie(String title, String genre, int duration, String rating, int releaseYear) {
+    public Movie(String title, String genre, int duration, double rating, int releaseYear) {
         this.title = title;
         this.genre = genre;
         this.duration = duration;
@@ -52,7 +51,7 @@ public class Movie {
     public String getTitle() { return title; }
     public String getGenre() { return genre; }
     public int getDuration() { return duration; }
-    public String getRating() { return rating; }
+    public double getRating() { return rating; }
     public int getReleaseYear() { return releaseYear; }
 
     public void setId(Long id) {
@@ -71,13 +70,11 @@ public class Movie {
         this.duration = duration;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
     public void setReleaseYear(int releaseYear) {
         this.releaseYear = releaseYear;
     }
-
-
 }

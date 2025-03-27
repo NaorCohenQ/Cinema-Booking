@@ -1,5 +1,6 @@
 package com.att.tdp.popcorn_palace.UnitTest;
 
+import com.att.tdp.popcorn_palace.Conflicts.ConflictException;
 import com.att.tdp.popcorn_palace.DTO.MovieRequest;
 import com.att.tdp.popcorn_palace.Models.Movie;
 import com.att.tdp.popcorn_palace.Repositories.MovieRepository;
@@ -28,7 +29,7 @@ class MovieServiceTests {
     @BeforeEach
     void setUp() {
         movieRepository.deleteAll();
-        movieR1 = new MovieRequest("Oppenheimer", "Biography", 180, "8.6", 2023);
+        movieR1 = new MovieRequest("Oppenheimer", "Biography", 180, 8.6, 2023);
         movie = new Movie(movieR1);
     }
 
@@ -48,7 +49,7 @@ class MovieServiceTests {
         when(movieRepository.findByTitle(movieR1.getTitle())).thenReturn(Optional.of(movie));
 
         assertThatThrownBy(() -> movieService.addMovie(movieR1))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ConflictException.class)
                 .hasMessageContaining("already exists");
 
         verify(movieRepository, never()).save(any(Movie.class));
@@ -56,7 +57,7 @@ class MovieServiceTests {
 
     @Test
     void updateMovie_shouldSucceed_whenMovieExists() {
-        MovieRequest updatedRequest = new MovieRequest("Oppenheimer", "Drama", 190, "9.0", 2023);
+        MovieRequest updatedRequest = new MovieRequest("Oppenheimer", "Drama", 190, 9.0, 2023);
         Movie updatedMovie = new Movie(updatedRequest);
 
         when(movieRepository.findByTitle(movieR1.getTitle())).thenReturn(Optional.of(movie));
@@ -65,7 +66,7 @@ class MovieServiceTests {
 
         assertThat(result.getGenre()).isEqualTo("Drama");
         assertThat(result.getDuration()).isEqualTo(190);
-        assertThat(result.getRating()).isEqualTo("9.0");
+        assertThat(result.getRating()).isEqualTo(9.0);
         verify(movieRepository).save(any(Movie.class));
     }
 

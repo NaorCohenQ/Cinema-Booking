@@ -17,16 +17,15 @@ public class MovieRequest {
 
     @Min(value = 0, message = ErrorMessages.DURATION_INVALID)
     private int duration;
-
-    @NotBlank(message = ErrorMessages.RATING_REQUIRED)
-    private String rating;
+    @DecimalMin(value = "0.0", inclusive = true, message = ErrorMessages.RATING_REQUIRED)
+    private double rating;
 
 //    @Min(value = 1, message = ErrorMessages.DURATION_INVALID)
     private int releaseYear;
 
     public MovieRequest() {}
 
-    public MovieRequest(String title, String genre, int duration, String rating, int releaseYear) {
+    public MovieRequest(String title, String genre, int duration, double rating, int releaseYear) {
         this.title = title;
         this.genre = genre;
         this.duration = duration;
@@ -38,13 +37,13 @@ public class MovieRequest {
     public String getTitle() { return title; }
     public String getGenre() { return genre; }
     public int getDuration() { return duration; }
-    public String getRating() { return rating; }
+    public double getRating() { return rating; }
     public int getReleaseYear() { return releaseYear; }
 
     public void setId(Long id) { this.id = id; }
     public void setTitle(String title) { this.title = title; }
     public void setGenre(String genre) { this.genre = genre; }
     public void setDuration(int duration) { this.duration = duration; }
-    public void setRating(String rating) { this.rating = rating; }
+    public void setRating(double rating) { this.rating = rating; }
     public void setReleaseYear(int releaseYear) { this.releaseYear = releaseYear; }
 }

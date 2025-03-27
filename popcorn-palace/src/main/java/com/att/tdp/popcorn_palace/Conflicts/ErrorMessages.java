@@ -5,7 +5,7 @@ public class ErrorMessages {
     // Movie validation
     public static final String MOVIE_TITLE_REQUIRED = "Movie title is required!";
     public static final String GENRE_REQUIRED = "Genre is required!";
-    public static final String RATING_REQUIRED = "Rating is required!";
+    public static final String RATING_REQUIRED = "Rating is required and must be a positive number!";
     public static final String DURATION_INVALID = "Duration cannot be positive!";
 
     // Showtime errors
